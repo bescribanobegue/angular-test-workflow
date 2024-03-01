@@ -1,0 +1,40 @@
+name: terraform-ci
+on:
+  workflow_call:
+jobs:
+  springboot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.4"
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: eu-south-2
+          role-to-assume: arn:aws:iam::891376988716:role/github-role-Role-z2NBvWzwKDIq
+      - name: Terraform Init
+        id: init
+        run: terraform init
+      - name: Checkov GitHub Action
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          output_format: cli
+          output_file_path: console
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        if: github.ref == 'refs/heads/feature/*'
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        continue-on-error: true
+        if: github.ref == 'refs/heads/feature/*'
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve
+        if: github.ref == 'refs/heads/main'

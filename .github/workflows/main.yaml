@@ -1,0 +1,7 @@
+name: main
+on:
+  workflow_call:
+jobs:
+  nodejs:
+    if: ${{ contains(github.event.repository.name, 'angular') }}
+    uses: .github/workflows/nodejs-ci.yaml@main
