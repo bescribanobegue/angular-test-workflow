@@ -4,4 +4,4 @@ on:
 jobs:
   nodejs:
     if: ${{ contains(github.event.repository.name, 'angular') }}
-    uses: .github/workflows/nodejs-ci.yaml@main
+    uses: bescribanobegue/angular-test-workflow/.github/workflows/nodejs-ci.yaml@main
