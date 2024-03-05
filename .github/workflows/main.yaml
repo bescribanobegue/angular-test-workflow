@@ -1,7 +1,8 @@
 name: main
 on:
-  workflow_call:
+  push:
 jobs:
   nodejs:
     if: ${{ contains(github.event.repository.name, 'angular') }}
     uses: bescribanobegue/angular-test-workflow/.github/workflows/nodejs-ci.yaml@main
+    secrets: inherit
